@@ -68,7 +68,11 @@ MYSQL_FAILED = <<-EO_MYSQL_FAILED
 
 Looks like we couldn't successfully talk to the mysql database.
 
-Don't worry though...
+Don't worry though; here are some things to try in order to get it working:
+
+ <b>1.</b> Check that mysql is installed and running.
+ <b>2.</b> Check that the database.yml we created in the step above contains 
+           the correct details to connect mysql.
 
 EO_MYSQL_FAILED
 
@@ -82,6 +86,7 @@ EO_CREATE_DATABASE_FAILED
 
   def show_welcome_screen
     colour_puts WELCOME_SCREEN
+    
     wait!
   end
 
@@ -142,7 +147,7 @@ EO_CREATE_DATABASE_FAILED
     rescue Mysql::Error
       colour_puts "<red>failed</red>"
       
-      puts MYSQL_FAILED
+      colour_puts MYSQL_FAILED
     end
     
     false
@@ -208,7 +213,16 @@ class String
   end
 end
 
+require 'rbconfig'
+
 module ContributeHelper
+  class Platform
+    class << self
+      def darwin?; RUBY_PLATFORM[/darwin/] end
+    end
+  end
+    
+  
   class Dependency
     def self.name(name=nil)
       if name then @name = name else @name end
